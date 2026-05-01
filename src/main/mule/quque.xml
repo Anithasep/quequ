@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="4c834094-03c3-4ea3-a1ed-d77c12591aad" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="4b385465-ea6d-4490-90c6-8c242dda99ce" >
+		<vm:connection />
+		<vm:queues >
+			<vm:queue queueName="test" />
+		</vm:queues>
+	</vm:config>
+	<flow name="ququeFlow" doc:id="fd86cfe0-cab6-4fbc-86d1-dc999acc98be" >
+		<http:listener doc:name="Listener" doc:id="76ded12a-9b4b-45f5-b333-dc9ef2046f65" config-ref="HTTP_Listener_config" path="/quequ"/>
+		<logger level="INFO" doc:name="Logger" doc:id="f5dc5c81-63f1-4e6d-94df-e81c1bf380b2" />
+		<set-payload value='#[[&#10;  {&#10;    "id": 1,&#10;    "name": "Alice",&#10;    "department": "HR",&#10;    "salary": 50000&#10;  },&#10;  {&#10;    "id": 2,&#10;    "name": "Bob",&#10;    "department": "IT",&#10;    "salary": 70000&#10;  },&#10;  {&#10;    "id": 3,&#10;    "name": "Charlie",&#10;    "department": "Finance",&#10;    "salary": 65000&#10;  }&#10;]]' doc:name="Set Payload" doc:id="18273891-8568-42c6-8ae8-4c65a637e94b" />
+		<ee:transform doc:name="Transform Message" doc:id="70828631-63c1-4335-babf-7262a20428ab" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload filter ((item, index) -> item.department == "HR")]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="29935125-898f-457d-95e1-792cf548a7cd" />
+		<vm:publish queueName="test" doc:name="Publish" doc:id="bdf3f4e8-f059-4600-8ba5-b90b5c85e4a2" config-ref="VM_Config"/>
+	</flow>
+	<flow name="ququeFlow1" doc:id="c199e636-f9f2-437a-b950-a99d60471906" >
+		<vm:listener doc:name="Listener" doc:id="10c29869-886f-484f-82e2-02feecb193a4" config-ref="VM_Config" queueName="test"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a7863c5c-8618-4151-aa41-064ef7ade2c5" />
+		<set-payload value='#[[&#10;  {&#10;    "id": 1,&#10;    "name": "Alice",&#10;    "department": "HR",&#10;    "salary": 50000&#10;  },&#10;  {&#10;    "id": 2,&#10;    "name": "Bob",&#10;    "department": "IT",&#10;    "salary": 70000&#10;  },&#10;  {&#10;    "id": 3,&#10;    "name": "Charlie",&#10;    "department": "Finance",&#10;    "salary": 65000&#10;  }&#10;]]' doc:name="Set Payload" doc:id="5c1f8d32-c236-4458-8f66-0caca5b40a17" />
+		<ee:transform doc:name="Transform Message" doc:id="fe0ad7cd-a38a-42a1-8315-b2d48ef9ac22" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload filter ((item, index) -> item.department == "HR")]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="f44ef865-c74f-4f8c-82b2-257b8ad7087f" />
+	</flow>
+</mule>
