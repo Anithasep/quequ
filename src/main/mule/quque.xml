@@ -33,7 +33,7 @@ payload filter ((item, index) -> item.department == "HR")]]></ee:set-payload>
 	<flow name="ququeFlow1" doc:id="c199e636-f9f2-437a-b950-a99d60471906" >
 		<vm:listener doc:name="Listener" doc:id="10c29869-886f-484f-82e2-02feecb193a4" config-ref="VM_Config" queueName="test"/>
 		<logger level="INFO" doc:name="Logger" doc:id="a7863c5c-8618-4151-aa41-064ef7ade2c5" />
-		<set-payload value='#[[&#10;  {&#10;    "id": 1,&#10;    "name": "Alice",&#10;    "department": "HR",&#10;    "salary": 50000&#10;  },&#10;  {&#10;    "id": 2,&#10;    "name": "Bob",&#10;    "department": "IT",&#10;    "salary": 70000&#10;  },&#10;  {&#10;    "id": 3,&#10;    "name": "Charlie",&#10;    "department": "Finance",&#10;    "salary": 65000&#10;  }&#10;]]' doc:name="Set Payload" doc:id="5c1f8d32-c236-4458-8f66-0caca5b40a17" />
+		<set-payload value='#[[&#10;  {&#10;    "id": 1,&#10;    "name": "Anitha",&#10;    "department": "HR",&#10;    "salary": 100000&#10;  },&#10;  {&#10;    "id": 2,&#10;    "name": "Bob",&#10;    "department": "IT",&#10;    "salary": 70000&#10;  },&#10;  {&#10;    "id": 3,&#10;    "name": "Charlie",&#10;    "department": "Finance",&#10;    "salary": 65000&#10;  }&#10;]]' doc:name="Set Payload" doc:id="5c1f8d32-c236-4458-8f66-0caca5b40a17" />
 		<ee:transform doc:name="Transform Message" doc:id="fe0ad7cd-a38a-42a1-8315-b2d48ef9ac22" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
